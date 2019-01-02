@@ -50,8 +50,8 @@ const user = {
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
-          commit('SET_TOKEN', data.token)
-          setToken(response.data.token)
+          commit('SET_TOKEN', data.data)
+          setToken(data.data)
           resolve()
         }).catch(error => {
           reject(error)
@@ -62,11 +62,11 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
+        getUserInfo().then(response => {
           if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
           }
-          const data = response.data
+          const data = response.data.data
 
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles)
@@ -75,8 +75,8 @@ const user = {
           }
 
           commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
+          commit('SET_AVATAR', '')
+          commit('SET_INTRODUCTION', data.code)
           resolve(response)
         }).catch(error => {
           reject(error)
