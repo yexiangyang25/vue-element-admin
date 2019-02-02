@@ -1,13 +1,13 @@
 <template>
-  <article-detail :is-edit="false"/>
+  <view-article-detail :is-view="true"/>
 </template>
 
 <script>
-import ArticleDetail from './components/ArticleDetail'
+import ViewArticleDetail from './components/ViewArticleDetail'
 
 export default {
   name: 'ViewForm',
-  components: { ArticleDetail }
+  components: { ViewArticleDetail }
 }
 </script>
 

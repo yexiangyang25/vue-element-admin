@@ -1,6 +1,5 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import { Message } from 'element-ui'
 
 const user = {
   state: {
@@ -50,17 +49,12 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
-          const data = response.data
-          if (!data.success) {
-            Message({
-              message: data.msg,
-              type: 'error',
-              duration: 5 * 1000
-            })
-            reject(data.msg)
+          const res = response.data
+          if (!res.success) {
+            reject(res.msg)
           } else {
-            commit('SET_TOKEN', data.data)
-            setToken(data.data)
+            commit('SET_TOKEN', res.data)
+            setToken(res.data)
             resolve()
           }
         }).catch(error => {
@@ -73,20 +67,20 @@ const user = {
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getUserInfo().then(response => {
-          if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
+          if (!response) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
           }
-          const data = response.data.data
+          const res = response.data.data
 
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
+          if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', res.roles)
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
 
-          commit('SET_NAME', data.name)
+          commit('SET_NAME', res.name)
           commit('SET_AVATAR', '')
-          commit('SET_INTRODUCTION', data.code)
+          commit('SET_INTRODUCTION', res.code)
           resolve(response)
         }).catch(error => {
           reject(error)

@@ -1,24 +1,11 @@
 <template>
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
-
-      <sticky :class-name="'sub-navbar '+postForm.status">
-        <CommentDropdown v-model="postForm.commentDisabled" />
-        <PlatformDropdown v-model="postForm.platforms" />
-        <SourceUrlDropdown v-model="postForm.source_uri" />
-        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">发布
-        </el-button>
-        <el-button v-loading="loading" type="warning" @click="draftForm">草稿</el-button>
-      </sticky>
-
       <div class="createPost-main-container">
         <el-row>
-
-          <Warning />
-
           <el-col :span="24">
             <el-form-item style="margin-bottom: 40px;" prop="title">
-              <MDinput v-model="postForm.title" :maxlength="100" name="name" required>
+              <MDinput v-model="postForm.title" :disabled="true" style="color:#2222ff" name="name" required>
                 标题
               </MDinput>
             </el-form-item>
@@ -26,16 +13,14 @@
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label-width="45px" label="作者:" class="postInfo-container-item">
-                    <el-select v-model="postForm.author" :remote-method="getRemoteUserList" filterable remote placeholder="搜索用户">
-                      <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item"/>
-                    </el-select>
+                  <el-form-item label-width="45px" label="作者:" >
+                    <span>{{ postForm.author }}</span>
                   </el-form-item>
                 </el-col>
 
                 <el-col :span="10">
                   <el-form-item label-width="80px" label="发布时间:" class="postInfo-container-item">
-                    <el-date-picker v-model="postForm.display_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"/>
+                    <span>{{ postForm.displayTime }}</span>
                   </el-form-item>
                 </el-col>
 
@@ -43,6 +28,7 @@
                   <el-form-item label-width="60px" label="评价:" class="postInfo-container-item">
                     <el-rate
                       v-model="postForm.importance"
+                      :disabled="isView"
                       :colors="['#99A9BF', '#F7BA2A', '#FF9900']"/>
                   </el-form-item>
                 </el-col>
@@ -52,17 +38,11 @@
         </el-row>
 
         <el-form-item style="margin-bottom: 40px;" label-width="45px" label="摘要:">
-          <el-input :rows="1" v-model="postForm.contentShort" type="textarea" class="article-textarea" autosize placeholder="请输入内容"/>
-          <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}字</span>
+          <span>{{ postForm.contentShort }}</span>
         </el-form-item>
 
-        <div class="editor-container">
-          <Tinymce ref="editor" :height="400" v-model="postForm.content" />
-        </div>
+        <div class="editor-container" v-html="postForm.content" />
 
-        <div style="margin-bottom: 20px;">
-          <Upload v-model="postForm.imageUri" />
-        </div>
       </div>
     </el-form>
 
@@ -75,11 +55,10 @@ import Upload from '@/components/Upload/singleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validateURL } from '@/utils/validate'
-import { fetchArticle, createArticle } from '@/api/article'
+import { fetchArticle } from '@/api/article'
 import { userSearch } from '@/api/remoteSearch'
 import Warning from './Warning'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
-import { notifyForRespone } from '@/api/index'
 
 const defaultForm = {
   status: 'draft',
@@ -96,10 +75,10 @@ const defaultForm = {
 }
 
 export default {
-  name: 'ArticleDetail',
+  name: 'ViewArticleDetail',
   components: { Tinymce, MDinput, Upload, Sticky, Warning, CommentDropdown, PlatformDropdown, SourceUrlDropdown },
   props: {
-    isEdit: {
+    isView: {
       type: Boolean,
       default: false
     }
@@ -146,14 +125,14 @@ export default {
   },
   computed: {
     contentShortLength() {
-      return this.postForm.contentShort.length
+      return this.postForm.content_short.length
     },
     lang() {
       return this.$store.getters.language
     }
   },
   created() {
-    if (this.isEdit) {
+    if (this.isView) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
     } else {
@@ -177,7 +156,7 @@ export default {
       })
     },
     setTagsViewTitle() {
-      const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article'
+      const title = this.lang === 'zh' ? '查看文章' : 'View Article'
       const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
       this.$store.dispatch('updateVisitedView', route)
     },
@@ -187,12 +166,14 @@ export default {
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
-          createArticle(this.postForm).then(response => {
-            const res = response.data
-            notifyForRespone(res, true)
-            this.postForm.status = 'published'
-            this.loading = false
+          this.$notify({
+            title: '成功',
+            message: '发布文章成功',
+            type: 'success',
+            duration: 2000
           })
+          this.postForm.status = 'published'
+          this.loading = false
         } else {
           console.log('error submit!!')
           return false

@@ -41,9 +41,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="120">
+      <el-table-column align="center" label="Actions" width="240">
         <template slot-scope="scope">
-          <router-link :to="'/example/edit/'+scope.row.id">
+          <router-link :to="'/example/view/'+scope.row.code">
+            <el-button type="primary" size="small" icon="el-icon-edit">View</el-button>
+          </router-link>
+          <router-link :to="'/example/edit/'+scope.row.code">
             <el-button type="primary" size="small" icon="el-icon-edit">Edit</el-button>
           </router-link>
         </template>
@@ -90,8 +93,9 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+        const res = response.data
+        this.list = res.data
+        this.total = res.total
         this.listLoading = false
       })
     },
