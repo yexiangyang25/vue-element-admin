@@ -40,7 +40,7 @@
                 </el-col>
 
                 <el-col :span="6">
-                  <el-form-item label-width="60px" label="评价:" class="postInfo-container-item">
+                  <el-form-item label-width="60px" label="重要性:" class="postInfo-container-item">
                     <el-rate
                       v-model="postForm.importance"
                       :colors="['#99A9BF', '#F7BA2A', '#FF9900']"/>

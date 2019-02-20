@@ -25,7 +25,7 @@
                 </el-col>
 
                 <el-col :span="6">
-                  <el-form-item label-width="60px" label="评价:" class="postInfo-container-item">
+                  <el-form-item label-width="60px" label="重要性:" class="postInfo-container-item">
                     <el-rate
                       v-model="postForm.importance"
                       :disabled="isView"
