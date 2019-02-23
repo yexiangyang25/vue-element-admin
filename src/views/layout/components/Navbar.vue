@@ -39,9 +39,11 @@
               {{ $t('navbar.github') }}
             </el-dropdown-item>
           </a>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
-          </el-dropdown-item>
+          <router-link to="/login">
+            <el-dropdown-item divided>
+              <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
+            </el-dropdown-item>
+          </router-link>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -81,7 +83,7 @@ export default {
       this.$store.dispatch('toggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
+      this.$store.dispatch('FedLogOut').then(() => {
         location.reload()// In order to re-instantiate the vue-router object to avoid bugs
       })
     }

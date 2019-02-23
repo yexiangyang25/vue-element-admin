@@ -20,7 +20,7 @@
 
                 <el-col :span="10">
                   <el-form-item label-width="80px" label="发布时间:" class="postInfo-container-item">
-                    <span>{{ postForm.displayTime }}</span>
+                    <span>{{ postForm.displayTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
                   </el-form-item>
                 </el-col>
 
