@@ -11,7 +11,7 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="http://peer:8443/upload"
+        action="http://peer:1443/upload"
         list-type="picture-card">
         <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>
