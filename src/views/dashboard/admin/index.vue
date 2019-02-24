@@ -3,11 +3,14 @@
 
     <github-corner style="position: absolute; top: 0px; border: 0; right: 0;"/>
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData"/>
-    <el-row :gutter="8" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;" >
-      <article-list/>
+    <el-row :gutter="24">
+      <el-col :xs="{span: 24}" :sm="{span: 36}" :md="{span: 36}" :lg="{span: 18}" :xl="{span: 18}" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+        <article-list/>
+      </el-col>
+      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
+        <box-card/>
+      </el-col>
     </el-row>
-
   </div>
 </template>
 
