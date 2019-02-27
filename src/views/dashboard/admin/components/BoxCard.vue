@@ -7,20 +7,18 @@
       <pan-thumb :image="avatar" class="panThumb"/>
       <mallki class-name="mallki-text" text="vue-element-admin"/>
       <div style="padding-top:35px;" class="progress-item">
-        <span>Vue</span>
-        <el-progress :percentage="70"/>
+        <!--<span>Vue</span>-->
+        <!--<el-progress :percentage="70"/>-->
+        <el-tag type="success" >全部</el-tag>
       </div>
       <div class="progress-item">
-        <span>JavaScript</span>
-        <el-progress :percentage="18"/>
-      </div>
-      <div class="progress-item">
-        <span>Css</span>
-        <el-progress :percentage="12"/>
-      </div>
-      <div class="progress-item">
-        <span>ESLint</span>
-        <el-progress :percentage="100" status="success"/>
+        <el-tag
+          v-for="tag in tags"
+          :key="tag.name"
+          :type="tag.type"
+          @click.native="handleClick(tag)">
+          {{ tag.name }}
+        </el-tag>
       </div>
     </div>
   </el-card>
@@ -45,6 +43,13 @@ export default {
   },
   data() {
     return {
+      tags: [
+        { name: '标签一', type: '' },
+        { name: '标签二', type: 'success' },
+        { name: '标签三', type: 'info' },
+        { name: '标签四', type: 'warning' },
+        { name: '标签五', type: 'danger' }
+      ],
       statisticsData: {
         article_count: 1024,
         pageviews_count: 1024
@@ -57,6 +62,11 @@ export default {
       'avatar',
       'roles'
     ])
+  },
+  methods: {
+    handleClick(type) {
+      console.log(type)
+    }
   }
 }
 </script>

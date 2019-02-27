@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function fetchList(query) {
   const data = {
     'source': 'pc',
-    'request': ''
+    'request': query
   }
   return request({
     url: '/article/list',
