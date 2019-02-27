@@ -5,9 +5,9 @@
       :multiple="false"
       :show-file-list="false"
       :on-success="handleImageSuccess"
+      :action="file_upload_api"
       class="image-uploader"
-      drag
-      action="http://peer:1443/upload">
+      drag>
       <i class="el-icon-upload"/>
       <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
     </el-upload>
@@ -43,6 +43,7 @@ export default {
   },
   data() {
     return {
+      file_upload_api: process.env.FILE_UPLOAD_API,
       tempUrl: '',
       dataObj: { token: '', key: '' }
     }

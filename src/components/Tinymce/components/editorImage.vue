@@ -10,8 +10,8 @@
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
+        :action="file_upload_api"
         class="editor-slide-upload"
-        action="http://peer:1443/upload"
         list-type="picture-card">
         <el-button size="small" type="primary">点击上传</el-button>
       </el-upload>
@@ -34,6 +34,7 @@ export default {
   },
   data() {
     return {
+      file_upload_api: process.env.FILE_UPLOAD_API,
       dialogVisible: false,
       listObj: {},
       fileList: []
