@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table :data="articleList" border fit highlight-current-row style="width: 100%">
       <el-table-column min-width="120px" label="文章题目">
         <template slot-scope="scope">
           <router-link :to="'/example/view/'+scope.row.code" class="link-type">
@@ -37,13 +37,19 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
-
+    <el-pagination
+      v-show="articleTotal>0"
+      :total="articleTotal"
+      :current-page="articlePage"
+      class="pagination-container"
+      background
+      layout="total, prev, pager, next"
+      @current-change="handleCurrentChange"/>
   </div>
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+// import { fetchList } from '@/api/article'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -61,13 +67,18 @@ export default {
   },
   data() {
     return {
-      list: null,
-      total: 0,
-      listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 20
-      }
+      limit: 10
+    }
+  },
+  computed: {
+    articlePage() {
+      return this.$store.getters.articlePage
+    },
+    articleList() {
+      return this.$store.getters.articleList
+    },
+    articleTotal() {
+      return this.$store.getters.articleTotal
     }
   },
   created() {
@@ -75,21 +86,14 @@ export default {
   },
   methods: {
     getList() {
-      this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        const res = response.data
-        this.list = res.data
-        this.total = res.total
-        this.listLoading = false
+      this.$store.dispatch('FetchList').then(() => {}).catch(() => {
       })
     },
-    handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
-    },
     handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
+      this.$store.dispatch('SetPage', val).then(() => {
+        this.$store.dispatch('FetchList').then(() => {})
+      }).catch(() => {
+      })
     }
   }
 }

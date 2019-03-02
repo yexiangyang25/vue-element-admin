@@ -9,7 +9,10 @@
       <div style="padding-top:35px;" class="progress-item">
         <!--<span>Vue</span>-->
         <!--<el-progress :percentage="70"/>-->
-        <el-tag type="success" >全部</el-tag>
+        <!--<el-tag type="success" >全部</el-tag>-->
+        <el-input v-model="input5" placeholder="请输入内容" class="input-with-select">
+          <el-button slot="append" icon="el-icon-search"/>
+        </el-input>
       </div>
       <div class="progress-item">
         <el-tag
@@ -17,7 +20,7 @@
           :key="tag.name"
           :type="tag.type"
           @click.native="handleClick(tag)">
-          {{ tag.name }}
+          <el-button type="text" style="line-height: 0px" >{{ tag.name }}</el-button>
         </el-tag>
       </div>
     </div>
@@ -43,6 +46,11 @@ export default {
   },
   data() {
     return {
+      input5: '',
+      listQuery: {
+        page: 1,
+        limit: 10
+      },
       tags: [
         { name: '标签一', type: '' },
         { name: '标签二', type: 'success' },
@@ -61,11 +69,18 @@ export default {
       'name',
       'avatar',
       'roles'
-    ])
+    ]),
+    articleKeyword() {
+      return this.$store.getters.articleKeyword
+    }
   },
   methods: {
     handleClick(type) {
-      console.log(type)
+      this.$store.dispatch('SetKeyword', type).then(() => {
+        this.$store.dispatch('FetchList').then(() => {
+        })
+      }).catch(() => {
+      })
     }
   }
 }
