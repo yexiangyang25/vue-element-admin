@@ -1,16 +1,14 @@
 <template>
   <div class="app-container">
 
-    <el-table :data="articleList" border fit highlight-current-row style="width: 100%">
+    <el-table :data="articleList" stripe fit highlight-current-row style="width: 100%" @row-click="rowClick"	>
       <el-table-column min-width="120px" label="文章题目">
         <template slot-scope="scope">
-          <router-link :to="'/example/view/'+scope.row.code" class="link-type">
-            <span>{{ scope.row.title }}</span>
-          </router-link>
+          <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="发布时间">
+      <el-table-column width="120px" align="center" label="发布时间">
         <template slot-scope="scope">
           <span>{{ scope.row.displayTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
@@ -28,7 +26,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="120">
+      <el-table-column v-if="isLogin()" align="center" label="Actions" width="120">
         <template slot-scope="scope">
           <router-link :to="'/example/edit/'+scope.row.code">
             <el-button type="primary" size="small" icon="el-icon-edit">Edit</el-button>
@@ -51,6 +49,7 @@
 <script>
 // import { fetchList } from '@/api/article'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'ArticleList',
@@ -85,6 +84,16 @@ export default {
     this.getList()
   },
   methods: {
+    isLogin() {
+      return getToken()
+    },
+    rowClick(row, event, column) {
+      if (column && column.label && column.label === 'Actions') {
+        // do nothing
+      } else {
+        this.$router.push('/example/view/' + row.code)
+      }
+    },
     getList() {
       this.$store.dispatch('FetchList').then(() => {}).catch(() => {
       })

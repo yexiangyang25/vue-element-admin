@@ -146,7 +146,7 @@ export default {
   },
   computed: {
     contentShortLength() {
-      return this.postForm.contentShort.length
+      return this.postForm.contentShort ? this.postForm.contentShort.length : 0
     },
     lang() {
       return this.$store.getters.language
