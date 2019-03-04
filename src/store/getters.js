@@ -19,6 +19,7 @@ const getters = {
   articlePage: state => state.article.page,
   articleKeyword: state => state.article.keyword,
   articleTag: state => state.article.tag,
+  articleLoading: state => state.article.loading,
   articleTotal: state => state.article.total
 }
 export default getters

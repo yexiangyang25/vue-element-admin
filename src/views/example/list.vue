@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
 
-    <el-table :data="articleList" stripe fit highlight-current-row style="width: 100%" @row-click="rowClick"	>
+    <el-table v-loading="articleLoading" :data="articleList" stripe fit highlight-current-row style="width: 100%" @row-click="rowClick"	>
       <el-table-column min-width="120px" label="文章题目">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
@@ -78,6 +78,9 @@ export default {
     },
     articleTotal() {
       return this.$store.getters.articleTotal
+    },
+    articleLoading() {
+      return this.$store.getters.articleLoading
     }
   },
   created() {

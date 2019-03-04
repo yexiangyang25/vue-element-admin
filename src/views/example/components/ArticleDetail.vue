@@ -35,7 +35,7 @@
 
                 <el-col :span="10">
                   <el-form-item label-width="80px" label="发布时间:" class="postInfo-container-item">
-                    <el-date-picker v-model="postForm.display_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"/>
+                    <el-date-picker v-model="postForm.displayTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"/>
                   </el-form-item>
                 </el-col>
 
@@ -83,6 +83,7 @@ import { notifyForRespone } from '@/api/index'
 
 const defaultForm = {
   status: 'draft',
+  code: '',
   title: '', // 文章题目
   content: '', // 文章内容
   contentShort: '', // 文章摘要
@@ -183,14 +184,13 @@ export default {
     },
     submitForm() {
       this.postForm.displayTime = parseInt(this.displayTime / 1000)
-      console.log(this.postForm)
       this.$refs.postForm.validate(valid => {
-        if (valid) {
+        if (valid && !this.loading) {
           this.loading = true
           createArticle(this.postForm).then(response => {
             const res = response.data
             notifyForRespone(res, true)
-            this.postForm.status = 'published'
+            this.postForm.code = res.data
             this.loading = false
           })
         } else {

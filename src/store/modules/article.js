@@ -6,10 +6,14 @@ const article = {
     page: 1,
     keyword: '',
     tag: '',
+    loading: false,
     total: 0
   },
 
   mutations: {
+    SET_LOADING: (state, loading) => {
+      state.loading = loading
+    },
     SET_TAG: (state, tag) => {
       state.tag = tag
     },
@@ -47,25 +51,30 @@ const article = {
       })
     },
     FetchList({ commit }) {
-      const page = this.state.article.page
-      const keyword = this.state.article.keyword
-      const tag = this.state.article.tag
-      const limit = 10
-      const param = { page, limit, keyword, tag }
-      return new Promise((resolve, reject) => {
-        fetchList(param).then(response => {
-          const res = response.data
-          if (!res.success) {
-            reject(res.msg)
-          } else {
-            commit('SET_LIST', res.data)
-            commit('SET_TOTAL', res.total)
-            resolve()
-          }
-        }).catch(error => {
-          reject(error)
+      if (!this.state.article.loading) {
+        commit('SET_LOADING', true)
+        const page = this.state.article.page
+        const keyword = this.state.article.keyword
+        const tag = this.state.article.tag
+        const limit = 10
+        const param = { page, limit, keyword, tag }
+        return new Promise((resolve, reject) => {
+          fetchList(param).then(response => {
+            commit('SET_LOADING', false)
+            const res = response.data
+            if (!res.success) {
+              reject(res.msg)
+            } else {
+              commit('SET_LIST', res.data)
+              commit('SET_TOTAL', res.total)
+              resolve()
+            }
+          }).catch(error => {
+            commit('SET_LOADING', false)
+            reject(error)
+          })
         })
-      })
+      }
     }
   }
 }
