@@ -6,22 +6,22 @@
     <div style="position:relative;">
       <pan-thumb :image="avatar" class="panThumb"/>
       <mallki class-name="mallki-text" text="vue-element-admin"/>
-      <div style="padding-top:35px;" class="progress-item">
-        <!--<span>Vue</span>-->
-        <!--<el-progress :percentage="70"/>-->
-        <!--<el-tag type="success" >全部</el-tag>-->
-        <el-input v-model="input5" placeholder="请输入内容" class="input-with-select">
-          <el-button slot="append" icon="el-icon-search"/>
-        </el-input>
-      </div>
-      <div class="progress-item">
-        <el-tag
+      <div style="position:relative;">
+        <pan-thumb :image="avatar" class="panThumb"/>
+        <mallki class-name="mallki-text" text="vue-element-admin"/>
+        <div style="padding-top:35px;" class="progress-item">
+          <el-input v-model="keyword" placeholder="请输入内容" class="input-with-select" clearable>
+            <el-button slot="append" icon="el-icon-search" @click="handleClick('')"/>
+          </el-input>
+        </div>
+        <div
           v-for="tag in tags"
           :key="tag.name"
-          :type="tag.type"
-          @click.native="handleClick(tag)">
-          <el-button type="text" style="line-height: 0px" >{{ tag.name }}</el-button>
-        </el-tag>
+          :type="tag.percentage"
+          class="progress-item">
+          <el-button type="text" @click="handleClick(tag)">{{ tag.name }}</el-button>
+          <el-progress :stroke-width="8" :percentage="tag.percentage"/>
+        </div>
       </div>
     </div>
   </el-card>
@@ -46,17 +46,14 @@ export default {
   },
   data() {
     return {
-      input5: '',
-      listQuery: {
-        page: 1,
-        limit: 10
-      },
+      percentage: 100,
+      keyword: '',
       tags: [
-        { name: '标签一', type: '' },
-        { name: '标签二', type: 'success' },
-        { name: '标签三', type: 'info' },
-        { name: '标签四', type: 'warning' },
-        { name: '标签五', type: 'danger' }
+        { name: 'LINUX', code: 'LINUX', percentage: 1 },
+        { name: 'GIT', code: 'LINUX', percentage: 2 },
+        { name: 'SVN', code: 'LINUX', percentage: 3 },
+        { name: 'JAVA', code: 'LINUX', percentage: 4 },
+        { name: 'Spring', code: 'LINUX', percentage: 5 }
       ],
       statisticsData: {
         article_count: 1024,
@@ -68,19 +65,21 @@ export default {
     ...mapGetters([
       'name',
       'avatar',
-      'roles'
-    ]),
-    articleKeyword() {
-      return this.$store.getters.articleKeyword
-    }
+      'roles',
+      'articleKeyword'
+    ])
+  },
+  created() {
+    this.keyword = this.articleKeyword
   },
   methods: {
     handleClick(type) {
-      this.$store.dispatch('SetKeyword', type).then(() => {
-        this.$store.dispatch('FetchList').then(() => {
-        })
-      }).catch(() => {
+      this.$store.dispatch('SetPage', 1).then()
+      this.$store.dispatch('SetKeyword', this.keyword).then()
+      this.$store.dispatch('SetTag', type.code).then()
+      this.$store.dispatch('FetchList').then().catch(() => {
       })
+      this.$store.dispatch('SetTag', '').then()
     }
   }
 }

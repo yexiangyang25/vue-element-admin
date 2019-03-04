@@ -5,10 +5,14 @@ const article = {
     list: [],
     page: 1,
     keyword: '',
+    tag: '',
     total: 0
   },
 
   mutations: {
+    SET_TAG: (state, tag) => {
+      state.tag = tag
+    },
     SET_LIST: (state, list) => {
       state.list = list
     },
@@ -24,6 +28,12 @@ const article = {
   },
 
   actions: {
+    SetTag({ commit }, param) {
+      return new Promise(resolve => {
+        commit('SET_TAG', param)
+        resolve()
+      })
+    },
     SetKeyword({ commit }, param) {
       return new Promise(resolve => {
         commit('SET_KEYWORD', param)
@@ -39,8 +49,9 @@ const article = {
     FetchList({ commit }) {
       const page = this.state.article.page
       const keyword = this.state.article.keyword
+      const tag = this.state.article.tag
       const limit = 10
-      const param = { page, limit, keyword }
+      const param = { page, limit, keyword, tag }
       return new Promise((resolve, reject) => {
         fetchList(param).then(response => {
           const res = response.data

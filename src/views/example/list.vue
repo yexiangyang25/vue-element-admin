@@ -90,9 +90,8 @@ export default {
       })
     },
     handleCurrentChange(val) {
-      this.$store.dispatch('SetPage', val).then(() => {
-        this.$store.dispatch('FetchList').then(() => {})
-      }).catch(() => {
+      this.$store.dispatch('SetPage', val).then()
+      this.$store.dispatch('FetchList').then(() => {}).catch(() => {
       })
     }
   }
