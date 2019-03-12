@@ -2,13 +2,15 @@
   <div class="app-container">
 
     <el-table v-loading="articleLoading" :data="articleList" stripe fit highlight-current-row style="width: 100%" @row-click="rowClick"	>
+      <el-table-column
+        type="index"/>
       <el-table-column min-width="120px" label="文章题目">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="发布时间">
+      <el-table-column min-width="80px" align="center" label="发布时间">
         <template slot-scope="scope">
           <span>{{ scope.row.displayTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
