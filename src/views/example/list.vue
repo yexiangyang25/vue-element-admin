@@ -12,7 +12,7 @@
 
       <el-table-column min-width="80px" align="center" label="发布时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.displayTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.displayTime | parseTime('{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
 

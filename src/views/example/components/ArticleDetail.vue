@@ -26,16 +26,28 @@
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label-width="45px" label="作者:" class="postInfo-container-item">
-                    <el-select v-model="postForm.author" :remote-method="getRemoteUserList" filterable remote placeholder="搜索用户">
-                      <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item"/>
+                  <el-form-item label-width="45px" label="标签:" class="postInfo-container-item">
+                    <el-select
+                      :remote-method="remoteMethod"
+                      v-model="value"
+                      :multiple-limit="3"
+                      remote
+                      multiple
+                      filterable
+                      default-first-option
+                      placeholder="请选择文章标签">
+                      <el-option
+                        v-for="item in options"
+                        :key="item.code"
+                        :label="item.code"
+                        :value="item.code" />
                     </el-select>
                   </el-form-item>
                 </el-col>
 
                 <el-col :span="10">
                   <el-form-item label-width="80px" label="发布时间:" class="postInfo-container-item">
-                    <el-date-picker v-model="postForm.displayTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"/>
+                    <el-date-picker v-model="postForm.displayTime" type="datetime" format="yyyy-MM-dd" placeholder="选择日期时间"/>
                   </el-form-item>
                 </el-col>
 
@@ -76,7 +88,7 @@ import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validateURL } from '@/utils/validate'
 import { fetchArticle, createArticle } from '@/api/article'
-import { userSearch } from '@/api/remoteSearch'
+import { userSearch, tagSearch } from '@/api/remoteSearch'
 import Warning from './Warning'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 import { notifyForRespone } from '@/api/index'
@@ -133,6 +145,8 @@ export default {
       }
     }
     return {
+      options: [],
+      value: [],
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
@@ -214,6 +228,17 @@ export default {
         duration: 1000
       })
       this.postForm.status = 'draft'
+    },
+    remoteMethod(query) {
+      tagSearch(query).then(response => {
+        if (!response.data) {
+          return
+        } else {
+          const res = response.data
+          this.options = res.data.map(v => v)
+          console.log(this.options)
+        }
+      })
     },
     getRemoteUserList(query) {
       userSearch(query).then(response => {

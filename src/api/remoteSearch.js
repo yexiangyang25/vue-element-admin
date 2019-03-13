@@ -7,3 +7,15 @@ export function userSearch(name) {
     params: { name }
   })
 }
+
+export function tagSearch(query) {
+  const data = {
+    'source': 'pc',
+    'request': query
+  }
+  return request({
+    url: '/tag/search',
+    method: 'post',
+    data
+  })
+}
