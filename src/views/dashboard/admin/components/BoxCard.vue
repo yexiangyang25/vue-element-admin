@@ -16,10 +16,10 @@
         </div>
         <div
           v-for="tag in tags"
-          :key="tag.name"
+          :key="tag.code"
           :type="tag.percentage"
           class="progress-item">
-          <el-button type="text" @click="handleClick(tag)">{{ tag.name }}</el-button>
+          <el-button type="text" @click="handleClick(tag)">{{ tag.code }}</el-button>
           <el-progress :stroke-width="8" :percentage="tag.percentage"/>
         </div>
       </div>
@@ -29,6 +29,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { countTag } from '@/api/remoteSearch'
 import PanThumb from '@/components/PanThumb'
 import Mallki from '@/components/TextHoverEffect/Mallki'
 
@@ -50,10 +51,10 @@ export default {
       keyword: '',
       tags: [
         { name: 'LINUX', code: 'LINUX', percentage: 1 },
-        { name: 'GIT', code: 'LINUX', percentage: 2 },
-        { name: 'SVN', code: 'LINUX', percentage: 3 },
-        { name: 'JAVA', code: 'LINUX', percentage: 4 },
-        { name: 'Spring', code: 'LINUX', percentage: 5 }
+        { name: 'GIT', code: 'GIT', percentage: 2 },
+        { name: 'SVN', code: 'SVN', percentage: 3 },
+        { name: 'JAVA', code: 'JAVA', percentage: 4 },
+        { name: 'Spring', code: 'Spring', percentage: 5 }
       ],
       statisticsData: {
         article_count: 1024,
@@ -71,6 +72,7 @@ export default {
   },
   created() {
     this.keyword = this.articleKeyword
+    this.remoteMethod()
   },
   methods: {
     handleClick(type) {
@@ -80,6 +82,17 @@ export default {
       this.$store.dispatch('FetchList').then().catch(() => {
       })
       this.$store.dispatch('SetTag', '').then()
+    },
+    remoteMethod() {
+      countTag().then(response => {
+        if (!response.data) {
+          return
+        } else {
+          const res = response.data
+          this.tags = res.data.map(v => v)
+          console.log(this.tags)
+        }
+      })
     }
   }
 }

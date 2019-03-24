@@ -19,3 +19,15 @@ export function tagSearch(query) {
     data
   })
 }
+
+export function countTag() {
+  const data = {
+    'source': 'pc',
+    'request': ''
+  }
+  return request({
+    url: '/tag/countTag',
+    method: 'post',
+    data
+  })
+}
