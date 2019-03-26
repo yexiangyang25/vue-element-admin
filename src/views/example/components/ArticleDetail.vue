@@ -29,7 +29,7 @@
                   <el-form-item label-width="45px" label="标签:" class="postInfo-container-item">
                     <el-select
                       :remote-method="remoteMethod"
-                      v-model="value"
+                      v-model="postForm.tags"
                       :multiple-limit="3"
                       remote
                       multiple
@@ -88,7 +88,7 @@ import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validateURL } from '@/utils/validate'
 import { fetchArticle, createArticle } from '@/api/article'
-import { userSearch, tagSearch } from '@/api/remoteSearch'
+import { tagSearch } from '@/api/remoteSearch'
 import Warning from './Warning'
 import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
 import { notifyForRespone } from '@/api/index'
@@ -103,6 +103,7 @@ const defaultForm = {
   imageUri: '', // 文章图片
   displayTime: undefined, // 前台展示时间
   id: undefined,
+  tags: [],
   platforms: ['a-platform'],
   commentDisabled: false,
   importance: 0
@@ -179,6 +180,7 @@ export default {
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     // https://github.com/PanJiaChen/vue-element-admin/issues/1221
     this.tempRoute = Object.assign({}, this.$route)
+    this.remoteMethod('')
   },
   methods: {
     fetchData(id) {
@@ -202,10 +204,10 @@ export default {
         if (valid && !this.loading) {
           this.loading = true
           createArticle(this.postForm).then(response => {
+            this.loading = false
             const res = response.data
             notifyForRespone(res, true)
             this.postForm.code = res.data
-            this.loading = false
           })
         } else {
           console.log('error submit!!')
@@ -236,14 +238,7 @@ export default {
         } else {
           const res = response.data
           this.options = res.data.map(v => v)
-          console.log(this.options)
         }
-      })
-    },
-    getRemoteUserList(query) {
-      userSearch(query).then(response => {
-        if (!response.data.items) return
-        this.userListOptions = response.data.items.map(v => v.name)
       })
     }
   }
