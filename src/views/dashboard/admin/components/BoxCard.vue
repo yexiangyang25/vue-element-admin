@@ -49,13 +49,7 @@ export default {
     return {
       percentage: 100,
       keyword: '',
-      tags: [
-        { name: 'LINUX', code: 'LINUX', percentage: 1 },
-        { name: 'GIT', code: 'GIT', percentage: 2 },
-        { name: 'SVN', code: 'SVN', percentage: 3 },
-        { name: 'JAVA', code: 'JAVA', percentage: 4 },
-        { name: 'Spring', code: 'Spring', percentage: 5 }
-      ],
+      tags: [],
       statisticsData: {
         article_count: 1024,
         pageviews_count: 1024
