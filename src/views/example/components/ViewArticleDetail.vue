@@ -13,8 +13,10 @@
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label-width="45px" label="作者:" >
-                    <span>{{ postForm.author }}</span>
+                  <el-form-item label-width="45px" label="标签:" >
+                    <el-tag v-for="tag in postForm.tags" :type="tag" :key="tag">
+                      {{ tag }}
+                    </el-tag>
                   </el-form-item>
                 </el-col>
 
@@ -69,6 +71,7 @@ const defaultForm = {
   imageUri: '', // 文章图片
   displayTime: undefined, // 前台展示时间
   id: undefined,
+  tags: [],
   platforms: ['a-platform'],
   commentDisabled: false,
   importance: 0
