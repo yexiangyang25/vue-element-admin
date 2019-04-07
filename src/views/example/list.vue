@@ -4,30 +4,21 @@
     <el-table v-loading="articleLoading" :data="articleList" stripe fit highlight-current-row style="width: 100%" @row-click="rowClick"	>
       <el-table-column
         type="index"/>
-      <el-table-column min-width="120px" label="文章题目">
+      <el-table-column min-width="220px" label="文章题目">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column min-width="360px" align="center" label="文章摘要">
+        <template slot-scope="scope">
+          <span>{{ scope.row.contentShort }}</span>
+        </template>
+      </el-table-column>
       <el-table-column min-width="80px" align="center" label="发布时间">
         <template slot-scope="scope">
           <span>{{ scope.row.displayTime | parseTime('{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column min-width="240px" align="center" label="文章摘要">
-        <template slot-scope="scope">
-          <span>{{ scope.row.contentShort }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="100px" label="重要性">
-        <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon"/>
-        </template>
-      </el-table-column>
-
       <el-table-column v-if="isLogin()" align="center" label="Actions" width="120">
         <template slot-scope="scope">
           <router-link :to="'/example/edit/'+scope.row.code">

@@ -52,10 +52,8 @@
                 </el-col>
 
                 <el-col :span="6">
-                  <el-form-item label-width="60px" label="重要性:" class="postInfo-container-item">
-                    <el-rate
-                      v-model="postForm.importance"
-                      :colors="['#99A9BF', '#F7BA2A', '#FF9900']"/>
+                  <el-form-item label-width="60px" label="浏览数:" class="postInfo-container-item">
+                    <span>{{ postForm.importance }}</span>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -199,7 +197,6 @@ export default {
       this.$store.dispatch('updateVisitedView', route)
     },
     submitForm() {
-      this.postForm.displayTime = parseInt(this.displayTime / 1000)
       this.$refs.postForm.validate(valid => {
         if (valid && !this.loading) {
           this.loading = true
