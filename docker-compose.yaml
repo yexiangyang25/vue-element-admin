@@ -1,0 +1,8 @@
+version: '3'
+services:
+  nginx:
+    container_name: prod-nginx
+    build: ./
+    restart: always
+    ports:
+      - 80:80

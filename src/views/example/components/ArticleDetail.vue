@@ -205,6 +205,9 @@ export default {
             const res = response.data
             notifyForRespone(res, true)
             this.postForm.code = res.data
+          }).catch(err => {
+            this.loading = false
+            console.log(err)
           })
         } else {
           console.log('error submit!!')
