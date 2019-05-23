@@ -25,7 +25,8 @@
 
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img v-if="isLogin()" :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img v-if="!isLogin()" :src="'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom"/>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -59,6 +60,7 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import ThemePicker from '@/components/ThemePicker'
+import { getToken } from '@/utils/auth'
 
 export default {
   components: {
@@ -79,12 +81,15 @@ export default {
     ])
   },
   methods: {
+    isLogin() {
+      return getToken()
+    },
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar')
     },
     logout() {
       this.$store.dispatch('FedLogOut').then(() => {
-        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+        // location.reload()// In order to re-instantiate the vue-router object to avoid bugs
       })
     }
   }

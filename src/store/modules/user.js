@@ -79,7 +79,7 @@ const user = {
           }
 
           commit('SET_NAME', res.name)
-          commit('SET_AVATAR', '')
+          commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
           commit('SET_INTRODUCTION', res.code)
           resolve(response)
         }).catch(error => {

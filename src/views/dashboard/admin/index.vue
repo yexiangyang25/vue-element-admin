@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <github-corner style="position: absolute; top: 0px; border: 0; right: 0;"/>
+    <!--<github-corner style="position: absolute; top: 0px; border: 0; right: 0;"/>-->
 
     <el-row :gutter="24">
       <el-col :xs="{span: 24}" :sm="{span: 36}" :md="{span: 36}" :lg="{span: 18}" :xl="{span: 18}" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">

@@ -4,10 +4,9 @@
       <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
     </div>
     <div style="position:relative;">
-      <pan-thumb :image="avatar" class="panThumb"/>
-      <mallki class-name="mallki-text" text="vue-element-admin"/>
       <div style="position:relative;">
-        <pan-thumb :image="avatar" class="panThumb"/>
+        <pan-thumb v-if="isLogin()" :image="avatar" class="panThumb"/>
+        <pan-thumb v-if="!isLogin()" :image="'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'" class="panThumb"/>
         <mallki class-name="mallki-text" text="vue-element-admin"/>
         <div style="padding-top:35px;" class="progress-item">
           <el-input v-model="keyword" placeholder="请输入内容" class="input-with-select" clearable>
@@ -32,6 +31,7 @@ import { mapGetters } from 'vuex'
 import { countTag } from '@/api/remoteSearch'
 import PanThumb from '@/components/PanThumb'
 import Mallki from '@/components/TextHoverEffect/Mallki'
+import { getToken } from '@/utils/auth'
 
 export default {
   components: { PanThumb, Mallki },
@@ -69,6 +69,9 @@ export default {
     this.remoteMethod()
   },
   methods: {
+    isLogin() {
+      return getToken()
+    },
     handleClick(type) {
       this.$store.dispatch('SetPage', 1).then()
       this.$store.dispatch('SetKeyword', this.keyword).then()
