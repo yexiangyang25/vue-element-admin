@@ -2,6 +2,12 @@ import Cookies from 'js-cookie'
 
 const TokenKey = 'Admin-Token'
 
+const language = 'language'
+
+export function getLanguage() {
+  return Cookies.get(language)
+}
+
 export function getToken() {
   return Cookies.get(TokenKey)
 }
