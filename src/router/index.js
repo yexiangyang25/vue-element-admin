@@ -11,6 +11,7 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
+import orderRouter from './modules/order'
 
 /** note: Submenu only appear when children.length>=1
  *  detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -31,6 +32,7 @@ import nestedRouter from './modules/nested'
   }
 **/
 export const constantRouterMap = [
+  orderRouter,
   {
     path: '/example',
     component: Layout,
