@@ -55,7 +55,7 @@
           <el-input v-model="postForm.title"/>
         </el-form-item>
         <el-form-item :label="$t('table.date')" prop="date">
-          <el-date-picker v-model="postForm.date" type="datetime" placeholder="Please pick a date"/>
+          <el-date-picker :picker-options="pickerOptions" v-model="postForm.date" type="date" value-format="yyyy-MM-dd" placeholder="Please pick a date"/>
         </el-form-item>
         <el-form-item label="男孩名" prop="mr">
           <el-input v-model="postForm.mr"/>
@@ -67,7 +67,7 @@
           <el-input v-model="postForm.signature"/>
         </el-form-item>
         <el-form-item :label="$t('table.remark')">
-          <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="postForm.remark" type="textarea" placeholder="Please input"/>
+          <a :href="getUrl()" target="_blank">{{ getUrl() }}</a>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -119,6 +119,31 @@ export default {
   },
   data() {
     return {
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now()
+        },
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            picker.$emit('pick', new Date())
+          }
+        }, {
+          text: '昨天',
+          onClick(picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24)
+            picker.$emit('pick', date)
+          }
+        }, {
+          text: '一周前',
+          onClick(picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', date)
+          }
+        }]
+      },
       tableKey: 0,
       list: [],
       total: 0,
@@ -151,7 +176,7 @@ export default {
         mr: [{ required: true, message: 'mr is required', trigger: 'blur' }],
         mrs: [{ required: true, message: 'mrs is required', trigger: 'blur' }],
         signature: [{ required: true, message: 'signature is required', trigger: 'blur' }],
-        date: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }]
+        date: [{ required: true, message: 'timestamp is required', trigger: 'change' }]
       }
     }
   },
@@ -159,6 +184,12 @@ export default {
     this.getList()
   },
   methods: {
+    getUrl() {
+      if (this.postForm && this.postForm.code) {
+        return window.location.origin + '/static/love/index.html?' + this.postForm.code
+      }
+      return null
+    },
     getList() {
       this.listLoading = true
       listShowLoveWall(this.listQuery).then(response => {
@@ -207,13 +238,16 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getList()
           })
         }
       })
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
+      fetchShowLoveWall(row.code).then(response => {
+        const res = response.data
+        this.postForm = res.data
+      })
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -223,16 +257,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateShowLoveWall(tempData).then(() => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
+          updateShowLoveWall(this.postForm).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -240,6 +265,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getList()
           })
         }
       })

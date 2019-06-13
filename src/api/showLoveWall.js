@@ -36,7 +36,11 @@ export function createShowLoveWall(obj) {
   })
 }
 
-export function updateShowLoveWall(data) {
+export function updateShowLoveWall(obj) {
+  const data = {
+    'source': 'pc',
+    'request': obj
+  }
   return request({
     url: '/order/love/update',
     method: 'post',
