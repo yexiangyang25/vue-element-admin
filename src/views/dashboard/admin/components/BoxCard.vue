@@ -86,8 +86,9 @@ export default {
           return
         } else {
           const res = response.data
-          this.tags = res.data.map(v => v)
-          console.log(this.tags)
+          if (res && res.data) {
+            this.tags = res.data.map(v => v)
+          }
         }
       })
     }

@@ -17,7 +17,7 @@
       @sort-change="sortChange">
       <el-table-column :label="$t('table.title')" min-width="150px">
         <template slot-scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.title }}</span>
+          <span class="link-type" @click="handleUrl(scope.row)">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.date')" width="150px" align="center">
@@ -66,7 +66,7 @@
         <el-form-item label="签名" prop="signature">
           <el-input v-model="postForm.signature"/>
         </el-form-item>
-        <el-form-item :label="$t('table.remark')">
+        <el-form-item v-if="getUrl()" label="戳链接->">
           <a :href="getUrl()" target="_blank">{{ getUrl() }}</a>
         </el-form-item>
       </el-form>
@@ -119,6 +119,7 @@ export default {
   },
   data() {
     return {
+      url: window.location.origin + '/static/love/index.html?',
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now()
@@ -167,8 +168,8 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: 'Edit',
-        create: 'Create'
+        update: '修改',
+        create: '新增'
       },
       dialogPvVisible: false,
       pvData: [],
@@ -184,9 +185,12 @@ export default {
     this.getList()
   },
   methods: {
+    handleUrl(row) {
+      window.open(this.url + row.code)
+    },
     getUrl() {
       if (this.postForm && this.postForm.code) {
-        return window.location.origin + '/static/love/index.html?' + this.postForm.code
+        return this.url + this.postForm.code
       }
       return null
     },
@@ -198,7 +202,7 @@ export default {
         this.list = res.data
         this.total = res.total
       }).catch(e => {
-        this.loading = false
+        this.listLoading = false
         console.log(e)
       })
     },

@@ -8,7 +8,7 @@ const orderRouter = {
   redirect: '/order/order-table',
   name: 'order',
   meta: {
-    title: 'Table',
+    title: '订单',
     icon: 'table'
   },
   children: [
@@ -16,7 +16,7 @@ const orderRouter = {
       path: 'order-table',
       component: () => import('@/views/order/orderTable'),
       name: 'OrderTable',
-      meta: { title: 'order-table' }
+      meta: { title: '纪念墙' }
     },
     {
       path: 'order-index',
