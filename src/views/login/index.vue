@@ -37,6 +37,22 @@
         </span>
       </el-form-item>
 
+      <el-form-item prop="imageCode">
+        <span class="svg-container">
+          <i class="el-icon-picture" />
+        </span>
+        <el-input
+          v-model="loginForm.imageCode"
+          :placeholder="$t('login.imageCode')"
+          style="width: 45%"
+          name="imageCode"
+          type="text"
+          auto-complete="on"
+        />
+        <el-button type="text" class="iconRight" @click="changeUid()" >换一张</el-button>
+        <img :src="getImageUrl()" alt="" class="iconRight">
+      </el-form-item>
+
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
       <!--
       <div class="tips">
@@ -63,6 +79,8 @@
 </template>
 
 <script>
+/* eslint-disable one-var */
+
 import { isvalidUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
@@ -87,12 +105,15 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '1111111'
+        username: '',
+        password: '',
+        uid: '',
+        imageCode: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        imageCode: [{ required: true, trigger: 'blur' }]
       },
       passwordType: 'password',
       loading: false,
@@ -110,12 +131,25 @@ export default {
 
   },
   created() {
+    this.changeUid()
     // window.addEventListener('hashchange', this.afterQRScan)
   },
   destroyed() {
     // window.removeEventListener('hashchange', this.afterQRScan)
   },
   methods: {
+    getImageUrl() {
+      return process.env.BASE_API + '/captcha/image?uid=' + this.loginForm.uid
+    },
+    generateGuuId() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8)
+        return v.toString(16)
+      })
+    },
+    changeUid() {
+      this.loginForm.uid = this.generateGuuId()
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -131,6 +165,7 @@ export default {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
           }).catch(() => {
+            this.changeUid()
             this.loading = false
           })
         } else {
@@ -212,6 +247,12 @@ export default {
 $bg:#2d3a4b;
 $dark_gray:#889aa4;
 $light_gray:#eee;
+
+.iconRight {
+  width: 80px;
+  height: 46px;
+  float: right ;
+}
 
 .login-container {
   position: fixed;
