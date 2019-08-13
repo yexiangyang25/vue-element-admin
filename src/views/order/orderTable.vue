@@ -66,8 +66,8 @@
         <el-form-item label="签名" prop="signature">
           <el-input v-model="postForm.signature"/>
         </el-form-item>
-        <el-form-item v-if="getUrl()" label="戳链接->">
-          <a :href="getUrl()" target="_blank">{{ getUrl() }}</a>
+        <el-form-item v-if="getUrl()" label="链接=>">
+          <a :href="getUrl()" target="_blank">点我</a>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -119,7 +119,7 @@ export default {
   },
   data() {
     return {
-      url: window.location.origin + '/static/love/index.html?',
+      url: window.location.origin + '/static/love/index.html#',
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now()
@@ -190,7 +190,9 @@ export default {
     },
     getUrl() {
       if (this.postForm && this.postForm.code) {
-        return this.url + this.postForm.code
+        const requestUri = process.env.BASE_API + '/info?key=' + this.postForm.code
+        const encode = btoa(requestUri)
+        return this.url + encode
       }
       return null
     },
